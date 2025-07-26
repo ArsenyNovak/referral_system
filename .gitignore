@@ -1,0 +1,5 @@
+.idea
+.venv
+.env
+project_rs/db.sqlite3
+project_rs/refsys/migrations

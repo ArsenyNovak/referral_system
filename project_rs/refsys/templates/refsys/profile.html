@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form action="" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <ul class="layuot_column">
+        <li><h2>Информация</h2></li>
+        <li><label>{{ form.username.label }}</label>{{ form.username }}</li>
+        <li><label>{{ form.invite_code.label }}</label>{{ form.invite_code }}</li>
+        <li><label>{{ form.other_code.label }}</label>{{ form.other_code }}
+        <div>{{ form.other_code.errors }}</div></li>
+        {% if form.other_code.errors %}
+        <li><button type="submit">установить реферала</button></li>
+        {% else %}
+        {% if not form.other_code.value %}
+        <li><button type="submit">установить реферала</button></li>
+        {% endif %}
+        {% endif %}
+        <li>Список пользователей</li>
+        <ul class="layuot_column">
+        {% for item in referals %}
+            <li>{{item.username}}</li>
+        {% endfor %}
+        </ul>
+        <li><a href="{% url 'home' %}" class="btn">вернуться в начало</a></li>
+    </ul>
+</form>
+{% endblock %}
+
+
+
+

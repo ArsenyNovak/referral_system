@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form action="" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <ul class="layuot_column">
+        <li><h2>Авторизация</h2></li>
+        <li><label>{{ form.number.label }}</label>{{ form.number }}
+        <div>{{ form.number.errors }}</div></li>
+        <li><button type="submit">Отправить код</button></li>
+    </ul>
+</form>
+{% endblock %}
+
+

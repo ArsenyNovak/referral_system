@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<ul class="layuot_column">
+    <li><h2>Добро пожаловать в реферальную систему</h2></li>
+    {% if user.is_authenticated %}
+    <li><a href="{% url 'profile' %}" class="btn">Войти в личный кабинет</a></li>
+    <li><form action="{% url 'logout' %}" method="post">
+    {% csrf_token %}
+    <button type="submit">Выйти</button>
+    </form></li>
+    {% else %}
+    <li><a href="{% url 'number_form' %}" class="btn">Зарегистрироваться</a></li>
+    {%endif%}
+</ul>
+{% endblock %}
