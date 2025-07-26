@@ -1,0 +1,42 @@
+services:
+
+  Django:
+    build: ./project_rs
+    image: referral_sys
+    container_name: Django
+    restart: always
+    command: "python manage.py runserver 0.0.0.0:8000"
+    env_file:
+      - .env
+    links:
+      - "postgres:dbps"
+    networks:
+      - dbnet
+    volumes:
+      - ./project_rs:/app/project_rs
+    ports:
+      - "4000:8000"
+    depends_on:
+      - postgres
+
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: psgr
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    networks:
+      - dbnet
+
+
+networks:
+  dbnet:
+    driver: bridge
+
+
+volumes:
+  postgres-data:
