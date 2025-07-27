@@ -1,8 +1,9 @@
 Referral System
 ===
+site: http://arseniprojects.store:4000
 
+Example referral System  
 
-Example referral System
 
 
 ## Technologies
@@ -10,7 +11,9 @@ Python, Django, DjangoRestFramework
 Docker, PostgreSQL
 
 ## API  
-[readme document API](project_rs/readmeAPI.md)
+[readme document API](project_rs/readmeAPI.md)  
+
+[file check API Postman](referral system.postman_collection.json)
 
 ## Local setup
 
