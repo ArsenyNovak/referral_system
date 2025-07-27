@@ -16,6 +16,6 @@ urlpatterns = [
     path('api/profile/', views.APIProfileView.as_view(), name='api_profile'),
 
 ]
-urlpatterns += [
-    path('api-token-auth/', obtain_auth_token)
-]
+# urlpatterns += [
+#     path('api-token-auth/', obtain_auth_token)
+# ]

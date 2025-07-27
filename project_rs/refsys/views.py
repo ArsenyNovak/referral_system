@@ -8,13 +8,14 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, FormView, UpdateView
 from rest_framework import status, permissions
+from rest_framework.authtoken.models import Token
 from rest_framework.generics import GenericAPIView, RetrieveUpdateAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from refsys.models import ClientUser
-from refsys.forms import NumberForm, CheckNumberForm, ProfileForm
-from refsys.serializers import NumberSerializer, CheckNumberSerializer, ClientSerializer
+from .models import ClientUser
+from .forms import NumberForm, CheckNumberForm, ProfileForm
+from .serializers import NumberSerializer, CheckNumberSerializer, ClientSerializer
 
 
 def generate_code(length):
@@ -67,12 +68,12 @@ class CheckCodeFormPageView(FormView):
                 form.add_error('code', "неверный код")
                 return self.form_invalid(form)
             else:
-                password = generate_code(6)
                 client, created = User.objects.get_or_create(username=number,
-                                                             defaults={'invite_code': password})
+                                                             defaults={'invite_code': generate_code(6)})
                 if created:
-                    client.set_password(password)
+                    client.set_password(generate_code(8))
                     client.save()
+                token, _ = Token.objects.get_or_create(user=client)
                 login(request, client)
                 cache.delete(f'auth_code_{number}')
                 cache.delete('number')
@@ -129,15 +130,15 @@ class APICheckCode(GenericAPIView):
             if cached_code != code:
                 return Response({"detail": "Неверный код."}, status=status.HTTP_400_BAD_REQUEST)
 
-            password = generate_code(6)
+
             client, created = User.objects.get_or_create(username=number,
-                                                         defaults={'invite_code': password})
+                                                         defaults={'invite_code': generate_code(6)})
             if created:
-                client.set_password(password)
+                client.set_password(generate_code(8))
                 client.save()
-            login(request, client)
+            token, _ = Token.objects.get_or_create(user=client)
             cache.delete(f'auth_code_{number}')
-            return Response({"detail": "Вы успешно вошли в систему."}, status=status.HTTP_200_OK)
+            return Response({"token": f"{token.key}"}, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
